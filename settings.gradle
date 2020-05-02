@@ -1,0 +1,2 @@
+rootProject.name='2020-05-01-TakariHarrison-NYCSchools'
+include ':app'

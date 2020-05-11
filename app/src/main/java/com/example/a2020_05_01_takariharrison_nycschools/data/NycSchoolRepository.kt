@@ -1,5 +1,6 @@
 package com.example.a2020_05_01_takariharrison_nycschools.data
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,6 +16,6 @@ class NycSchoolRepository @Inject constructor(
 
     fun getSchoolListData(): Single<List<SchoolListData>> = nycSchoolAPI.getNycSchoolListData()
 
-    fun getSchoolSatData(schoolName: String): Single<List<SchoolSatData>> =
+    fun getSchoolSatData(schoolName: String): Observable<List<SchoolSatData>> =
         nycSchoolAPI.getSchoolSatData(schoolName.toUpperCase())
 }

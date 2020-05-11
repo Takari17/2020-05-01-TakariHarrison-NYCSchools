@@ -24,7 +24,7 @@ class SchoolListAdapter(
     override fun getItemCount(): Int = schoolListData.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //Not planning on translating this application so String Placeholders would be redundant.
+
         holder.apply {
             schoolName.text = "School Name: ${schoolListData[position].name}"
             city.text = "City: ${schoolListData[position].city}"

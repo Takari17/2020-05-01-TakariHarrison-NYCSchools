@@ -1,5 +1,6 @@
 package com.example.a2020_05_01_takariharrison_nycschools.data
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -15,5 +16,5 @@ interface NycSchoolAPI {
 
     //school name must be in caps for whatever reason
     @GET("https://data.cityofnewyork.us/resource/f9bf-2cp4.json")
-    fun getSchoolSatData(@Query("school_name") schoolNameInCaps: String): Single<List<SchoolSatData>>
+    fun getSchoolSatData(@Query("school_name") schoolNameInCaps: String): Observable<List<SchoolSatData>>
 }

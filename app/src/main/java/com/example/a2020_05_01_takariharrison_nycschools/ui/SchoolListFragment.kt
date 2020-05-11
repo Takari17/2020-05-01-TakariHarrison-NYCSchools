@@ -9,7 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.a2020_05_01_takariharrison_nycschools.App.Companion.applicationComponent
 import com.example.a2020_05_01_takariharrison_nycschools.R
-import com.example.a2020_05_01_takariharrison_nycschools.dagger.activityViewModelFactory
+import com.example.a2020_05_01_takariharrison_nycschools.activityViewModelFactory
+import com.example.a2020_05_01_takariharrison_nycschools.deviceType
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -19,7 +20,11 @@ class SchoolListFragment : Fragment() {
 
     private val viewModel by activityViewModelFactory { applicationComponent.nycSchoolViewModel }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_school_list, container, false)
     }
 
@@ -30,15 +35,17 @@ class SchoolListFragment : Fragment() {
 
         //fetches the school list data from the API then populates the recycler view with the results.
         viewModel.getSchoolListData()
-            .subscribeOn(Schedulers.io()) //performs operation on background thread
-            .observeOn(AndroidSchedulers.mainThread()) // observes the results on the main thread
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = { schoolListData ->
 
-                    val schoolListAdapter = SchoolListAdapter(schoolListData) { itemSelectedIndex -> // ran when recycler view item is clicked
-                            viewModel.currentFragment.accept(CurrentFragment.SchoolSatFrag)
-                            viewModel.schoolData = schoolListData[itemSelectedIndex]
-                        }
+                    val schoolListAdapter = SchoolListAdapter(schoolListData) { selectedItemIndex ->
+                        viewModel.adapterItemClick(
+                            deviceType(resources),
+                            schoolListData[selectedItemIndex]
+                        )
+                    }
 
                     schoolListRecyclerView.apply {
                         setHasFixedSize(true)
@@ -50,7 +57,7 @@ class SchoolListFragment : Fragment() {
                 },
                 onError = { e ->
                     Log.d("zwi", "Error getting school list data in SchoolListFragment: $e")
-                    viewModel.currentFragment.accept(CurrentFragment.ErrorFrag)
+                    viewModel.onError(deviceType(resources))
                 }
             )
     }
